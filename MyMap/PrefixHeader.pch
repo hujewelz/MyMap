@@ -1,0 +1,19 @@
+//
+//  PrefixHeader.pch
+//  MyMap
+//
+//  Created by jewelz on 15/6/19.
+//  Copyright (c) 2015年 yangtzeu. All rights reserved.
+//
+
+#ifndef MyMap_PrefixHeader_pch
+#define MyMap_PrefixHeader_pch
+
+#import <BaiduMapAPI/BMapKit.h>
+#import "UIViewController+Extention.h"
+#define KEY @"kQcqaW0OPQ0HPYFVdXCZTsRO"
+#define FileName @"mysave"
+
+#define MapViewDidReloadLocationNotification @"MapViewDidReloadLocation"
+
+#endif
