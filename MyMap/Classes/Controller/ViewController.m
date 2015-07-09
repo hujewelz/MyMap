@@ -110,7 +110,7 @@ static const CGFloat kSearchBarWidth = 240;
 {
     if (!_isUpdating) return;
     
-    [self showAlertViewWithMesg:@"didUpdateUserHeading"];
+    //[self showAlertViewWithMesg:@"didUpdateUserHeading"];
     
     [_mapView updateLocationData:userLocation];
     NSLog(@"didUpdateUserHeading -- latitude: %f, longitude: %f",userLocation.location.coordinate.latitude, userLocation.location.coordinate.longitude);
@@ -119,10 +119,10 @@ static const CGFloat kSearchBarWidth = 240;
 //处理位置坐标更新
 - (void)didUpdateBMKUserLocation:(BMKUserLocation *)userLocation
 {
-    if (!_isUpdating) return;
     
-   NSString *msg = [NSString stringWithFormat:@"经度%f:, 纬度:%f", userLocation.location.coordinate.longitude,userLocation.location.coordinate.latitude];
-    [self showAlertViewWithMesg:msg];
+    
+   //NSString *msg = [NSString stringWithFormat:@"经度%f:, 纬度:%f", userLocation.location.coordinate.longitude,userLocation.location.coordinate.latitude];
+    //[self showAlertViewWithMesg:msg];
     
     _currentLocation = userLocation.location.coordinate;
     _myLocation = userLocation.location.coordinate;
@@ -131,6 +131,8 @@ static const CGFloat kSearchBarWidth = 240;
     [_mapView updateLocationData:userLocation];
     
     NSLog(@"didUpdateBMKUserLocation -- latitude: %f, longitude: %f",_currentLocation.latitude, _currentLocation.longitude);
+    
+    if (!_isUpdating) return;
     [self reverseGeocodeWithCoordinate:_currentLocation];
     
     _isUpdating = NO;
@@ -212,7 +214,7 @@ static const CGFloat kSearchBarWidth = 240;
         } else {
             _currentCodeResult = result;
         }
-       [self showAlertViewWithMesg:[NSString stringWithFormat:@"位置：%@",result.address]];
+       //[self showAlertViewWithMesg:[NSString stringWithFormat:@"位置：%@",result.address]];
         
         //_address = result.address;
         NSLog(@"address: %@", _currentCodeResult.address);
@@ -294,7 +296,7 @@ static const CGFloat kSearchBarWidth = 240;
 }
 
 #pragma mark - HUSearchViewdelegate 
-- (void)didSelectRowAtIndex:(NSInteger)index withData:(NSString *)data{
+- (void)didSelectRowAtIndex:(NSInteger)index withData:(NSString *)data{     //定位到选择的位置
     
     [self geocode:data withCity:@""];
     [self searchBarCancelButtonClicked:_searchBar];
@@ -328,22 +330,22 @@ static const CGFloat kSearchBarWidth = 240;
             
 }
 
-- (void)clickMenuButton:(UIButton *)sender {
-    if (sender.tag == 1) {
+- (void)clickMenuButton:(UIButton *)sender {    //弹出视图按钮点击
+    if (sender.tag == 1) {  //收藏地点
          NSDictionary *dict = @{@"latitude":@(_currentCodeResult.location.latitude),@"longitude":@(_currentCodeResult.location.longitude), @"address":_currentCodeResult.address};
         
         BOOL flag = [[DocumentTool sharedDocumentTool] write:dict ToFileWithFileName:FileName];
         if (flag) {
             [[[HUAlertView alloc] initWithTitle:@"添加收藏成功!"] show];
         }
-    } else {
+    } else {    //添加大头针
         [self addPointAnnotationWithCoordinate:_currentCodeResult.location andTitle:_currentCodeResult.address];
     }
    
     
 }
 
-- (void)didCancleButtonClicked {
+- (void)didCancleButtonClicked {    //关闭弹出视图
 
     [UIView animateWithDuration:0.4 animations:^{
         CGRect tmp = _menu.frame;
@@ -435,6 +437,8 @@ static const CGFloat kSearchBarWidth = 240;
 }
 
 - (void)didShowNavigationBarAnimated {
+    
+    [self didCancleButtonClicked];  //关闭弹出视图
     if (self.navigationController.navigationBarHidden) {
         [self.navigationController setNavigationBarHidden:NO animated:YES];
         [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
